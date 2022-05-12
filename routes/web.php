@@ -24,3 +24,5 @@ $router->get('/products/{id}','ProductController@ver');
 $router->post('/products','ProductController@save');
 
 $router->delete('/products/{id}','ProductController@delete');
+
+$router->post('/products/{id}','ProductController@update');

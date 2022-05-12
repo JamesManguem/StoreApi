@@ -49,7 +49,7 @@ class ProductController extends Controller{
 
           
 
-        return response()->json($request);
+        return response()->json($nuevoNombre);
 
     }
 
@@ -64,6 +64,7 @@ class ProductController extends Controller{
         $dataProduct= Product::find($id);
 
         if($dataProduct){
+
             $rutaArchivo=base_path('public').$dataProduct->Picture;
           
             if(file_exists($rutaArchivo)){
@@ -73,6 +74,71 @@ class ProductController extends Controller{
         }
 
         return response()->json("Archive Deleted");
+    }
+    public function update(Request $request,$id){
+        
+        $dataProduct = Product::find($id);
+
+
+        if($request->hasFile('Picture')) { 
+
+
+
+            if($dataProduct){
+
+                $rutaArchivo=base_path('public').$dataProduct->Picture;
+              
+                if(file_exists($rutaArchivo)){
+                  unlink($rutaArchivo);
+                }
+              $dataProduct->delete();  
+            }
+
+
+
+            $nombreArchivoOriginal=$request->file('Picture')->getClientOriginalName();
+
+            $nuevoNombre= Carbon::now()->timestamp."_".$nombreArchivoOriginal;
+
+            $carpetaDestino='./upload/';
+
+            $request->file('Picture')->move($carpetaDestino, $nuevoNombre);
+
+           $dataProduct -> Picture = ltrim($carpetaDestino,'.').$nuevoNombre;
+
+           $dataProduct ->save(); 
+        }
+
+
+        
+        if($request->input('Name')){
+            $dataProduct->Name=$request->input('Name');
+        }
+         
+        if($request->input('Description')){
+            $dataProduct->Description=$request->input('Description');
+        }
+
+
+        if($request->input('Price')){
+            $dataProduct->Price=$request->input('Price');
+        }
+
+        if($request->input('Stock')){
+            $dataProduct->Stock=$request->input('Stock');
+        }
+
+
+
+
+
+
+        $dataProduct ->save();
+
+
+
+        return response()->json("Updated Data");
+         
     }
 
 
