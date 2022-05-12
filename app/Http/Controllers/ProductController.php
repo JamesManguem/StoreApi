@@ -56,11 +56,25 @@ class ProductController extends Controller{
     public function ver($id){
         $dataProduct = new Product;
         $dataFind=$dataProduct->find($id);
-
-
-
        return response()->json($dataFind);
 
+    } 
+    public function delete($id){
+
+        $dataProduct= Product::find($id);
+
+        if($dataProduct){
+            $rutaArchivo=base_path('public').$dataProduct->Picture;
+          
+            if(file_exists($rutaArchivo)){
+              unlink($rutaArchivo);
+            }
+          $dataProduct->delete();  
+        }
+
+        return response()->json("Archive Deleted");
     }
+
+
 
 }
