@@ -44,19 +44,22 @@ class ProductController extends Controller{
 
           $dataProduct ->save();
 
-
-
-
-
-
-
-
           }
 
 
           
 
         return response()->json($request);
+
+    }
+
+    public function ver($id){
+        $dataProduct = new Product;
+        $dataFind=$dataProduct->find($id);
+
+
+
+       return response()->json($dataFind);
 
     }
 
